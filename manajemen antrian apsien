@@ -1,0 +1,143 @@
+patients = []  # List untuk menyimpan data pasien
+stack = []  # Stack untuk implementasi LIFO
+queue = []  # Queue untuk implementasi FIFO
+
+def add_patient():
+    patient_id = input("Masukkan ID Pasien: ")
+    name = input("Masukkan Nama Pasien: ")
+    age = input("Masukkan Umur Pasien: ")
+    ailment = input("Masukkan Keluhan Pasien: ")
+    patient = {"ID": patient_id, "Name": name, "Age": int(age), "Ailment": ailment}
+    patients.append(patient)  # Menambahkan pasien ke dalam daftar
+    stack.append(patient)  # Menambahkan pasien ke dalam stack (LIFO)
+    queue.append(patient)  # Menambahkan pasien ke dalam queue (FIFO)
+    print("Pasien berhasil ditambahkan.\n")
+
+def display_patients():
+    if not patients:
+        print("Tidak ada pasien dalam daftar.\n")
+        return
+    print("\nDaftar Pasien:")
+    print(f"{'ID':<10} {'Nama':<30} {'Umur':<5} {'Keluhan':<20}")
+    print("-" * 70)
+    for patient in patients:
+        print(f"{patient['ID']:<10} {patient['Name']:<30} {patient['Age']:<5} {patient['Ailment']:<20}")
+    print()
+
+def delete_patient():
+    patient_id = input("Masukkan ID Pasien yang ingin dihapus: ")
+    global patients
+    for patient in patients:
+        if patient['ID'] == patient_id:
+            patients.remove(patient)  # Menghapus dari daftar pasien
+            if patient in stack:
+                stack.remove(patient)  # Menghapus dari stack
+            if patient in queue:
+                queue.remove(patient)  # Menghapus dari queue
+            print("Pasien berhasil dihapus.\n")
+            return
+    print("Pasien tidak ditemukan.\n")
+
+def update_patient():
+    patient_id = input("Masukkan ID Pasien yang ingin diupdate: ")
+    for patient in patients:
+        if patient['ID'] == patient_id:
+            new_name = input("Masukkan Nama Baru: ")
+            new_age = input("Masukkan Umur Baru: ")
+            new_ailment = input("Masukkan Keluhan Baru: ")
+            patient['Name'] = new_name
+            patient['Age'] = int(new_age)
+            patient['Ailment'] = new_ailment
+            print("Pasien berhasil diupdate.\n")
+            return
+    print("Pasien tidak ditemukan.\n")
+
+def quick_sort(arr):
+    if len(arr) <= 1:
+        return arr
+    pivot = arr[0]
+    less = []
+    greater = []
+    for patient in arr[1:]:
+        if patient['Age'] <= pivot['Age']:
+            less.append(patient)
+        else:
+            greater.append(patient)
+    return quick_sort(less) + [pivot] + quick_sort(greater)
+
+def sort_patients_by_age():
+    global patients
+    patients = quick_sort(patients)
+    print("Pasien telah diurutkan berdasarkan umur.\n")
+
+def recursive_search(data, target, index=0):
+    if index >= len(data):
+        return None
+    if target.lower() in data[index]['Name'].lower():
+        return data[index]
+    return recursive_search(data, target, index + 1)
+
+def search_patient_recursive():
+    target = input("Masukkan Nama Pasien yang ingin dicari: ")
+    result = recursive_search(patients, target)
+    if result:
+        print(f"\nPasien Ditemukan: {result}\n")
+    else:
+        print("Pasien tidak ditemukan.\n")
+
+def display_stack():
+    if not stack:
+        print("Stack kosong.\n")
+        return
+    print("\nPasien dalam Stack (LIFO):")
+    for patient in reversed(stack):
+        print(f"{patient['ID']} - {patient['Name']} ({patient['Age']} tahun, {patient['Ailment']})")
+    print()
+
+def display_queue():
+    if not queue:
+        print("Queue kosong.\n")
+        return
+    print("\nPasien dalam Queue (FIFO):")
+    for patient in queue:
+        print(f"{patient['ID']} - {patient['Name']} ({patient['Age']} tahun, {patient['Ailment']})")
+    print()
+
+def main_menu():
+    while True:
+        print("=== Sistem Manajemen Antrian Pasien Klinik ===")
+        print("1. Tambah Pasien")
+        print("2. Tampilkan Semua Pasien")
+        print("3. Update Data Pasien")
+        print("4. Hapus Pasien")
+        print("5. Urutkan Pasien Berdasarkan Umur")
+        print("6. Cari Pasien (Rekursi)")
+        print("7. Tampilkan Pasien di Stack (LIFO)")
+        print("8. Tampilkan Pasien di Queue (FIFO)")
+        print("9. Keluar")
+        choice = input("Pilih menu (1-9): ")
+        print()
+        if choice == "1":
+            add_patient()
+        elif choice == "2":
+            display_patients()
+        elif choice == "3":
+            update_patient()
+        elif choice == "4":
+            delete_patient()
+        elif choice == "5":
+            sort_patients_by_age()
+        elif choice == "6":
+            search_patient_recursive()
+        elif choice == "7":
+            display_stack()
+        elif choice == "8":
+            display_queue()
+        elif choice == "9":
+            print("Terima kasih telah menggunakan Sistem Manajemen Antrian Pasien Klinik!")
+            break
+        else:
+            print("Pilihan tidak valid. Silakan coba lagi.\n")
+
+if __name__ == "__main__":
+    main_menu()
